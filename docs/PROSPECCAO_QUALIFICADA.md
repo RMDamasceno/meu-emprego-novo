@@ -36,33 +36,33 @@ currículos adaptados anteriormente não servem mais como fonte factual de outra
 ## 3. Dados privados e exemplos
 
 O repositório público contém **somente dados fictícios** em
-\`examples/prospecting/\`. Nunca salve currículo real, salários negociados,
+`examples/prospecting/`. Nunca salve currículo real, salários negociados,
 nomes de recrutadores, e-mails, histórico de contatos ou PDFs no git.
 
 Crie localmente:
 
-\`\`\`bash
+```bash
 mkdir -p privado input/vagas
 cp examples/prospecting/policy.example.json privado/policy.json
 cp examples/prospecting/profile.example.json privado/profile.json
 cp examples/prospecting/job.example.json input/vagas/exemplo.json
-\`\`\`
+```
 
-Edite \`privado/profile.json\` com competências **comprovadas** pelo
-\`profile_truth.md\`. A base \`data/<pessoa>/resume.json\` continua canônica
+Edite `privado/profile.json` com competências **comprovadas** pelo
+`profile_truth.md`. A base `data/<pessoa>/resume.json` continua canônica
 para o gerador de currículo. O JSON de triagem não substitui a base do currículo.
 
-Configure \`privado/policy.json\` com pisos mensais **separados** para CLT
+Configure `privado/policy.json` com pisos mensais **separados** para CLT
 e PJ, levando em conta benefícios, impostos, férias e carga horária. O exemplo
 mostra CLT R$ 12 mil e PJ R$ 18 mil **como ilustração**, não salário de mercado.
 
-Valores de \`mode\`: \`remote_br\`, \`hybrid_sp\`; use \`onsite\` para registrar
+Valores de `mode`: `remote_br`, `hybrid_sp`; use `onsite` para registrar
 uma vaga que será barrada pela política. Registre área, senioridade, contrato
 e requisitos obrigatórios exatamente como publicados na fonte.
 
 ## 4. Operação local
 
-\`\`\`bash
+```bash
 # Vaga com evidência técnica, data e remuneração
 python -m src.scripts.prospecting screen \
   --job input/vagas/exemplo.json \
@@ -94,15 +94,15 @@ python -m src.scripts.prospecting record \
   --status interview
 
 python -m src.scripts.prospecting report --tracker privado/tracker.jsonl
-\`\`\`
+```
 
 O pré-envio retorna código 2 se houver bloqueios. A triagem também
-retorna 2 para \`review\` ou \`blocked\`. A execução do módulo **não envia**
+retorna 2 para `review` ou `blocked`. A execução do módulo **não envia**
 e-mails, não opera LinkedIn e não marca candidaturas como entregues.
 
 Mesmo com pontuação 100, sem remuneração publicada ou fonte validada a triagem
-retorna \`review\`. Faltas obrigatórias, inglês não comprovado, modalidade
-incompatível ou envio anterior resultam em \`blocked\`.
+retorna `review`. Faltas obrigatórias, inglês não comprovado, modalidade
+incompatível ou envio anterior resultam em `blocked`.
 
 ## 5. B2B separado do processo pessoal
 
@@ -116,15 +116,15 @@ requisitos de habilitação, prazo, custo/receita esperados e canal permitido.
 - Sem canal confirmado, escopo, destinatário ou histórico: não enviar.
 - Contatos genéricos sem necessidade demonstrada não entram no funil.
 
-Exemplo de verificação de proposta privada, após preencher \`kind=b2b\`,
-\`company\`, \`title\` e \`origin_type=private_company\` em um arquivo local:
+Exemplo de verificação de proposta privada, após preencher `kind=b2b`,
+`company`, `title` e `origin_type=private_company` em um arquivo local:
 
-\`\`\`bash
+```bash
 python -m src.scripts.prospecting preflight \
   --job input/vagas/proposta-privada.json \
   --channel gmail --source-verified --recipient-verified \
   --history-checked --demand-verified
-\`\`\`
+```
 
 O preflight verifica condições informadas pelo operador, não pesquisa nem
 atesta independentemente a identidade de quem publicou a vaga.
@@ -147,9 +147,9 @@ ATS. Não inclua dados pessoais em prompts de LLM sem revisar privacidade.
 
 ## 7. Validação sem chaves externas
 
-\`\`\`bash
+```bash
 python -m unittest tests.test_prospecting -v
-\`\`\`
+```
 
 Esses testes não usam tokens, bancos remotos, GitHub Actions nem provedor de IA.
 Os testes do CrewAI seguem separados e dependem das respectivas bibliotecas.
