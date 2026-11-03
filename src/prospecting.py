@@ -17,7 +17,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 SENT_STATUSES = {"sent", "applied", "proposal_sent"}
 KNOWN_STATUSES = {
     "found", "screened", "ready", "sent", "applied", "proposal_sent",
-    "reply", "interview", "offer", "rejected", "withdrawn", "closed",
+    "reply", "interview", "offer", "rejected", "withdrawn", "closed", "bounced",
 }
 TRACKING_PARAMS = {"fbclid", "gclid", "msclkid", "li_fat_id"}
 
@@ -176,7 +176,8 @@ def screen_job(job: dict, profile: dict, policy: dict,
 def preflight(item: dict, events: list[dict], *, channel: str,
               source_verified: bool, recipient_verified: bool,
               history_checked: bool, demand_verified: bool = False,
-              attachment: str = "", screen_decision: str = "") -> dict:
+              attachment: str = "", screen_decision: str = "",
+              recipient: str = "") -> dict:
     """Verifica segurança antes de tentar qualquer ação externa. Não envia."""
     failures = []
     kind = normalized(item.get("kind", "job"))
@@ -184,6 +185,16 @@ def preflight(item: dict, events: list[dict], *, channel: str,
         failures.append("Oportunidade já contatada.")
     if not source_verified:
         failures.append("Origem não verificada.")
+    recipient_normalized = normalized(recipient)
+    if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", recipient.strip()):
+        failures.append("Endereço de destinatário ausente ou inválido.")
+    expected_email = normalized(item.get("recipient_email"))
+    if expected_email and expected_email != recipient_normalized:
+        failures.append("Destinatário não corresponde ao contato da publicação.")
+    if any(event.get("status") == "bounced" and
+           normalized(event.get("recipient")) == recipient_normalized
+           for event in events if recipient_normalized):
+        failures.append("Destinatário com devolução registrada; não reenviar.")
     if not history_checked:
         failures.append("Histórico de envios não consultado.")
     if kind == "job":
