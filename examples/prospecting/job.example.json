@@ -1,0 +1,25 @@
+{
+  "kind": "job",
+  "company": "Empresa Exemplo",
+  "title": "Especialista SRE",
+  "job_id": "SRE-2026-42",
+  "url": "https://careers.example.com/jobs/42",
+  "source": "Carreiras",
+  "source_verified": true,
+  "published_at": "2026-11-02",
+  "area": "SRE / Observabilidade",
+  "seniority": "Especialista",
+  "mode": "remote_br",
+  "contract": "CLT",
+  "mandatory_skills": [
+    "AWS",
+    "Kubernetes",
+    "Terraform"
+  ],
+  "desired_skills": [
+    "Prometheus",
+    "Grafana"
+  ],
+  "salary_monthly_brl": 15000,
+  "english_level": "intermediate"
+}
