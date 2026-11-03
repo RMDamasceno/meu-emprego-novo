@@ -1,3 +1,6 @@
+# Dados locais de prospecção: nunca versionar
+privado/
+
 # Python / env
 __pycache__/
 *.pyc

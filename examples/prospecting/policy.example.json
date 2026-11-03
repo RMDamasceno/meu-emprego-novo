@@ -1,0 +1,29 @@
+{
+  "areas": [
+    "Cloud / Arquitetura",
+    "DevOps / Platform",
+    "SRE / Observabilidade",
+    "DevSecOps / Segurança",
+    "FinOps",
+    "Liderança técnica"
+  ],
+  "seniority": [
+    "Sênior",
+    "Especialista",
+    "Tech Lead",
+    "Arquiteto",
+    "Coordenação"
+  ],
+  "modes": [
+    "remote_br",
+    "hybrid_sp"
+  ],
+  "contracts": [
+    "CLT",
+    "PJ"
+  ],
+  "minimum_monthly_brl": {
+    "CLT": 12000,
+    "PJ": 18000
+  }
+}

@@ -67,7 +67,7 @@ def run_for_job_desc(person: str, job_desc_path: str, provider: str = None, lang
         print(f"[ERROR] Arquivo de vaga não encontrado: {job_desc_path}")
         sys.exit(1)
 
-    from src.scripts.resume_matcher import extract_job_title, find_best_resume
+    from src.scripts.resume_matcher import extract_job_title
 
     job_desc = path.read_text(encoding="utf-8")
 
@@ -78,19 +78,10 @@ def run_for_job_desc(person: str, job_desc_path: str, provider: str = None, lang
 
     original_resume_path = f"data/{person}/resume.json"
 
-    # Procura o currículo existente mais aderente a esta vaga (dentre os da mesma pessoa)
-    match = find_best_resume(job_desc, outputs_dir=f"outputs/{person}")
-    if match:
-        match_path, match_score, match_folder = match
-        base_resume = match_path
-        print(f"\n[INFO] Currículo mais aderente encontrado:")
-        print(f"       outputs/{person}/{match_folder}/  (aderência: {match_score:.0%})")
-        print(f"[INFO] Usando como ponto de partida para esta vaga.\n")
-    else:
-        base_resume = original_resume_path
-        print(f"\n[INFO] Nenhum currículo existente aderente. Usando currículo original.\n")
-
-    output_dir = prepare_output_dir(person, role_name, base_resume_path=base_resume)
+    # Recomece sempre da fonte canônica: versões geradas podem conter erros
+    # acumulados que não devem ser propagados para outras candidaturas.
+    print("\n[INFO] Fonte factual: currículo canônico da pessoa.\n")
+    output_dir = prepare_output_dir(person, role_name, base_resume_path=original_resume_path)
 
     from src.agents.job_application_crew import JobApplicationCrew
 

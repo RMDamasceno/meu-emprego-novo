@@ -1,3 +1,5 @@
+> **Extensão de prospecção qualificada:** [triagem com evidências, prevenção de duplicatas, bloqueios de envio e métricas](docs/PROSPECCAO_QUALIFICADA.md). O módulo local não envia mensagens e mantém dados reais fora do repositório.
+
 # Agente da Meia Idade (*Mid-Life Agent*)
 
 ![logo](images/logo.jpeg)
