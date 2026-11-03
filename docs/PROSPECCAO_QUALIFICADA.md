@@ -74,7 +74,7 @@ python -m src.scripts.prospecting screen \
 python -m src.scripts.prospecting preflight \
   --job input/vagas/exemplo.json \
   --tracker privado/tracker.jsonl \
-  --channel outlook \
+  --channel outlook --recipient recrutamento@exemplo.com \
   --source-verified --recipient-verified --history-checked \
   --screen-decision eligible \
   --attachment input/candidato/curriculo_atualizado.pdf
@@ -95,6 +95,9 @@ python -m src.scripts.prospecting record \
 
 python -m src.scripts.prospecting report --tracker privado/tracker.jsonl
 ```
+
+Se houver falha de entrega, registre um evento `bounced` com `--recipient`
+e mantenha esse endereço excluído de novos contatos.
 
 O pré-envio retorna código 2 se houver bloqueios. A triagem também
 retorna 2 para `review` ou `blocked`. A execução do módulo **não envia**
@@ -122,7 +125,8 @@ Exemplo de verificação de proposta privada, após preencher `kind=b2b`,
 ```bash
 python -m src.scripts.prospecting preflight \
   --job input/vagas/proposta-privada.json \
-  --channel gmail --source-verified --recipient-verified \
+  --channel gmail --recipient comercial@exemplo.com \
+  --source-verified --recipient-verified \
   --history-checked --demand-verified
 ```
 
