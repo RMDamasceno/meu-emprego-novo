@@ -9,7 +9,6 @@ import hashlib
 import json
 import re
 import unicodedata
-from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -263,7 +262,8 @@ def metrics(events: list[dict]) -> dict:
         states.add(event.get("status", ""))
         if event.get("kind") == "job" and event.get("status") in SENT_STATUSES:
             by_source.setdefault(event.get("source") or "não informada", set()).add(key)
-    applied = sum(bool(s & {"applied", "sent", "interview", "offer"}) for s in jobs.values())
+    # Sem comprovante de envio, entrevista isolada não vira candidatura confirmada.
+    applied = sum(bool(s & {"applied", "sent"}) for s in jobs.values())
     interviewed = sum("interview" in s or "offer" in s for s in jobs.values())
     proposals = sum("proposal_sent" in s for s in b2b.values())
     replied = sum(bool(s & {"reply", "offer"}) for s in b2b.values())
