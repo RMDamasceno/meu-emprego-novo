@@ -33,6 +33,7 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--channel", required=True, choices=["outlook", "gmail"])
     check.add_argument("--source-verified", action="store_true")
     check.add_argument("--recipient-verified", action="store_true")
+    check.add_argument("--recipient", required=True)
     check.add_argument("--history-checked", action="store_true")
     check.add_argument("--demand-verified", action="store_true")
     check.add_argument("--attachment", default="")
@@ -68,6 +69,7 @@ def main(argv: list[str] | None = None) -> int:
                 history_checked=args.history_checked,
                 demand_verified=args.demand_verified,
                 attachment=args.attachment, screen_decision=args.screen_decision,
+                recipient=args.recipient,
             )
         elif args.command == "record":
             result = record_event(
