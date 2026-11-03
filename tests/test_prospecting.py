@@ -79,7 +79,7 @@ class ProspectingTests(unittest.TestCase):
         result = preflight(
             JOB, [], channel="outlook", source_verified=True,
             recipient_verified=True, history_checked=True,
-            screen_decision="eligible",
+            screen_decision="eligible", recipient="rh@example.com",
         )
         self.assertFalse(result["ready"])
         self.assertIn("Currículo anexável não encontrado.", result["blockers"])
@@ -91,7 +91,7 @@ class ProspectingTests(unittest.TestCase):
             result = preflight(
                 JOB, [], channel="outlook", source_verified=True,
                 recipient_verified=True, history_checked=True,
-                screen_decision="eligible", attachment=str(cv),
+                screen_decision="eligible", recipient="rh@example.com", attachment=str(cv),
             )
             self.assertTrue(result["ready"])
 
@@ -102,9 +102,38 @@ class ProspectingTests(unittest.TestCase):
         result = preflight(
             notice, [], channel="gmail", source_verified=True,
             recipient_verified=True, history_checked=True, demand_verified=True,
+            recipient="compras@example.gov.br",
         )
         self.assertFalse(result["ready"])
         self.assertTrue(any("canal oficial" in x for x in result["blockers"]))
+
+    def test_preflight_refuses_failed_email_address(self):
+        with tempfile.TemporaryDirectory() as folder:
+            tracker = Path(folder, "events.jsonl")
+            cv = Path(folder, "cv.pdf")
+            cv.write_bytes(b"mock pdf")
+            record_event(tracker, JOB, "bounced", recipient="rh@example.com")
+            result = preflight(
+                JOB, load_events(tracker), channel="outlook",
+                recipient="rh@example.com", source_verified=True,
+                recipient_verified=True, history_checked=True,
+                screen_decision="eligible", attachment=str(cv),
+            )
+            self.assertFalse(result["ready"])
+            self.assertTrue(any("devolução" in x for x in result["blockers"]))
+
+    def test_preflight_rejects_published_contact_mismatch(self):
+        with tempfile.TemporaryDirectory() as folder:
+            cv = Path(folder, "cv.pdf")
+            cv.write_bytes(b"mock")
+            result = preflight(
+                {**JOB, "recipient_email": "recruiter@example.com"},
+                [], channel="outlook", recipient="different@example.com",
+                source_verified=True, recipient_verified=True,
+                history_checked=True, screen_decision="eligible",
+                attachment=str(cv),
+            )
+            self.assertFalse(result["ready"])
 
     def test_record_requires_proof_and_prevents_duplicates(self):
         with tempfile.TemporaryDirectory() as folder:
