@@ -129,6 +129,11 @@ python -m src.scripts.prospecting preflight \
 O preflight verifica condições informadas pelo operador, não pesquisa nem
 atesta independentemente a identidade de quem publicou a vaga.
 
+Para revisão do perfil profissional, use o prompt
+[`prompts/11-linkedin-cloud-sre.md`](../prompts/11-linkedin-cloud-sre.md).
+Ele gera propostas de título, Sobre, competências e auditoria de consistência
+sem editar o LinkedIn ou publicar dados pessoais.
+
 ## 6. Indicadores e rotinas
 
 | Frequência | Atividade | Indicadores |
